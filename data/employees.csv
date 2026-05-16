@@ -1,0 +1,501 @@
+employee_id,name,age,department,salary,experience_years,performance_score,city,hire_date,is_remote
+1,Employee 1,25.0,Marketing,34700.62,6.0,83.8,San Francisco,2021-12-23,True
+2,Employee 2,55.0,Marketing,90225.72,36.6,79.0,Phoenix,2023-07-20,False
+3,Employee 3,50.0,Finance,104695.31,30.6,75.4,Chicago,2022-11-04,True
+4,Employee 4,40.0,Engineering,95240.54,17.8,81.2,New York,2023-01-20,True
+5,Employee 5,40.0,Operations,62627.47,18.7,75.2,Phoenix,2020-05-01,True
+6,Employee 6,58.0,Sales,101454.01,37.5,86.6,Portland,2020-10-18,True
+7,Employee 7,25.0,Operations,47732.44,3.2,74.8,Austin,2021-02-05,False
+8,Employee 8,51.0,Operations,105629.58,29.3,89.7,Miami,2021-03-02,False
+9,Employee 9,30.0,HR,46105.14,9.6,74.5,Phoenix,2020-10-10,True
+10,Employee 10,26.0,HR,44837.78,3.9,79.5,Austin,2023-11-20,False
+11,Employee 11,44.0,HR,85418.7,20.5,79.0,Miami,2020-08-28,True
+12,Employee 12,63.0,Operations,116878.13,40.0,94.6,Miami,,True
+13,Employee 13,53.0,Marketing,92390.75,32.3,86.6,Denver,2022-05-06,False
+14,Employee 14,54.0,Finance,,32.0,82.3,Portland,2022-06-10,True
+15,Employee 15,52.0,Operations,82600.83,30.7,88.0,Austin,2020-11-09,False
+16,Employee 16,55.0,Marketing,97094.61,34.3,67.1,Phoenix,2021-03-25,True
+17,Employee 17,44.0,Operations,77068.9,21.3,83.7,Phoenix,2022-06-04,True
+18,Employee 18,27.0,Operations,50457.36,6.5,100.0,,2021-03-12,False
+19,Employee 19,58.0,Engineering,99957.38,36.8,85.1,Miami,2022-10-10,False
+20,Employee 20,41.0,Finance,,16.5,84.5,New York,2020-02-27,True
+21,Employee 21,43.0,Sales,85501.73,23.9,88.4,Chicago,2020-04-16,True
+22,Employee 22,37.0,Sales,,14.0,91.2,Boston,2022-11-29,False
+23,Employee 23,29.0,Engineering,55014.05,3.7,,Phoenix,2022-06-19,True
+24,Employee 24,61.0,HR,110225.24,36.9,70.5,Denver,2020-03-04,True
+25,Employee 25,55.0,Marketing,99000.68,31.0,85.7,Denver,2023-08-05,False
+26,Employee 26,49.0,Sales,82427.54,27.1,78.3,Seattle,2020-01-08,True
+27,Employee 27,39.0,Engineering,72731.95,16.5,94.5,Miami,2023-10-27,False
+28,Employee 28,57.0,Marketing,,34.3,81.5,Chicago,2022-12-01,True
+29,Employee 29,45.0,HR,97745.35,24.2,68.5,New York,2023-12-13,False
+30,Employee 30,41.0,HR,86386.84,19.7,73.9,Phoenix,2023-10-17,False
+31,Employee 31,41.0,Marketing,76886.77,19.6,62.0,Seattle,2021-04-02,True
+32,Employee 32,31.0,Finance,49695.54,9.8,82.1,New York,2023-01-09,True
+33,Employee 33,25.0,Marketing,36100.71,4.2,82.5,New York,2020-11-03,True
+34,Employee 34,45.0,HR,90529.14,18.8,80.6,Boston,2021-11-19,False
+35,Employee 35,60.0,Sales,110101.99,37.3,92.6,Seattle,2020-12-16,False
+36,Employee 36,24.0,Engineering,47041.15,0.0,93.6,San Francisco,2021-12-10,False
+37,Employee 37,,Operations,90443.31,36.1,82.6,Denver,2023-06-27,True
+38,Employee 38,57.0,Engineering,110019.51,35.0,66.9,Chicago,2021-09-28,True
+39,Employee 39,33.0,Sales,63035.36,13.1,88.9,New York,2020-05-14,False
+40,Employee 40,49.0,Finance,79316.55,29.4,88.4,Boston,2021-04-18,False
+41,Employee 41,,Finance,48427.8,7.4,86.5,Seattle,2023-02-22,False
+42,Employee 42,54.0,Engineering,99309.74,31.0,91.9,Phoenix,2022-01-31,True
+43,Employee 43,52.0,Sales,94019.73,31.0,74.7,Austin,2022-03-28,True
+44,Employee 44,37.0,Engineering,64262.63,13.9,100.0,Boston,2021-09-21,True
+45,Employee 45,24.0,Marketing,42372.09,2.0,76.3,New York,,True
+46,Employee 46,63.0,Sales,111384.18,40.0,90.0,Seattle,2022-05-23,True
+47,Employee 47,41.0,Operations,75020.5,17.9,70.5,Austin,2022-07-13,False
+48,Employee 48,60.0,Sales,119771.94,39.6,76.6,New York,2023-08-04,True
+49,Employee 49,51.0,HR,71266.73,30.4,96.1,Miami,2022-06-20,False
+50,Employee 50,55.0,Sales,97105.2,31.1,81.9,Phoenix,2023-12-23,False
+51,Employee 51,54.0,Sales,98612.1,33.9,90.7,,2023-04-21,False
+52,Employee 52,30.0,HR,56367.95,9.4,85.9,Austin,2020-04-24,False
+53,Employee 53,37.0,Engineering,63624.68,15.2,83.2,Miami,,True
+54,Employee 54,42.0,Operations,,18.5,94.9,Denver,2021-07-15,False
+55,Employee 55,43.0,Engineering,80023.96,19.3,82.1,New York,2020-01-05,True
+56,Employee 56,23.0,Marketing,55218.8,0.0,69.8,New York,2020-09-20,False
+57,Employee 57,160.0,HR,104729.11,40.0,77.6,Denver,2023-01-17,False
+58,Employee 58,28.0,Engineering,57310.62,4.1,88.4,Boston,2021-05-29,False
+59,Employee 59,53.0,Sales,92771.8,31.9,87.2,New York,2020-08-03,True
+60,Employee 60,51.0,Engineering,91309.41,26.5,71.5,Phoenix,2021-02-23,True
+61,Employee 61,61.0,Sales,101376.81,38.6,78.2,,2021-02-05,True
+62,Employee 62,54.0,Sales,94524.35,32.2,79.3,Denver,,True
+63,Employee 63,37.0,Engineering,77000.36,19.9,81.1,Phoenix,2020-05-27,False
+64,Employee 64,63.0,HR,118061.24,38.2,73.0,Phoenix,2023-01-20,True
+65,Employee 65,39.0,Sales,84058.49,19.9,79.0,Phoenix,2023-04-18,True
+66,Employee 66,36.0,Marketing,74219.3,14.3,78.2,Austin,2021-12-25,False
+67,Employee 67,60.0,Engineering,111512.69,38.8,90.2,San Francisco,2022-06-17,True
+68,Employee 68,37.0,Operations,80551.48,15.2,90.5,Denver,2023-09-04,False
+69,Employee 69,25.0,HR,48511.95,3.9,82.8,Miami,2023-05-15,True
+70,Employee 70,42.0,Engineering,82223.91,19.7,80.9,San Francisco,2020-02-17,True
+71,Employee 71,56.0,Operations,98427.43,36.9,85.1,Seattle,2023-10-23,False
+72,Employee 72,30.0,Engineering,54532.37,7.1,77.5,Boston,,False
+73,Employee 73,41.0,Marketing,68220.61,21.3,74.8,Seattle,2020-02-08,False
+74,Employee 74,27.0,Operations,56516.67,3.7,76.5,Austin,2021-08-11,False
+75,Employee 75,51.0,Marketing,82373.57,28.9,78.9,Boston,2022-12-24,True
+76,Employee 76,42.0,Marketing,81858.8,17.9,74.7,San Francisco,2020-04-27,False
+77,Employee 77,36.0,Finance,63274.79,14.9,85.3,San Francisco,2021-03-03,True
+78,Employee 78,31.0,Engineering,65169.98,11.9,89.8,Chicago,2021-01-18,False
+79,Employee 79,46.0,Marketing,88806.95,23.8,71.3,Chicago,2021-08-03,True
+80,Employee 80,50.0,Operations,104565.17,27.6,84.2,Denver,2023-12-10,False
+81,Employee 81,62.0,Engineering,117446.2,37.8,82.2,Phoenix,2021-04-28,True
+82,Employee 82,40.0,Operations,59423.68,17.5,86.7,Phoenix,2020-11-01,False
+83,Employee 83,28.0,Finance,49864.37,2.8,83.9,Austin,2020-06-27,False
+84,Employee 84,57.0,Marketing,93223.94,33.2,72.4,Seattle,2020-10-16,False
+85,Employee 85,49.0,Engineering,84053.76,27.5,73.9,Miami,2020-07-13,False
+86,Employee 86,52.0,Marketing,105689.83,32.6,84.2,Chicago,2022-04-17,True
+87,Employee 87,26.0,HR,51900.27,9.6,92.2,Seattle,2021-09-05,True
+88,Employee 88,35.0,HR,57408.56,11.8,66.3,New York,2021-12-28,False
+89,Employee 89,55.0,Sales,90890.26,35.9,86.8,Boston,2023-04-29,True
+90,Employee 90,57.0,Engineering,102862.26,35.5,93.5,Chicago,2022-04-27,True
+91,Employee 91,40.0,Finance,62267.52,17.7,82.8,Denver,2020-08-14,True
+92,Employee 92,56.0,Marketing,95430.88,34.9,88.4,Austin,2021-07-04,False
+93,Employee 93,58.0,Engineering,106896.08,36.1,,Miami,2021-04-01,True
+94,Employee 94,38.0,HR,77642.5,16.2,83.0,Portland,2023-04-22,True
+95,Employee 95,60.0,Finance,112870.09,37.2,71.0,Boston,,False
+96,Employee 96,34.0,Marketing,,9.2,65.2,Seattle,2020-07-21,True
+97,Employee 97,32.0,Operations,60034.93,6.9,91.5,Denver,2022-12-10,True
+98,Employee 98,51.0,Operations,92376.27,30.3,76.1,Portland,2021-09-17,True
+99,Employee 99,49.0,HR,91511.12,26.4,80.4,Chicago,2020-05-19,False
+100,Employee 100,28.0,Engineering,,4.8,72.9,Austin,2022-10-04,True
+101,Employee 101,57.0,Engineering,86094.09,35.0,72.7,Denver,2020-11-03,False
+102,Employee 102,30.0,Marketing,49271.17,9.6,82.6,Chicago,2023-06-21,True
+103,Employee 103,56.0,Engineering,105527.25,34.4,78.2,Boston,2023-04-30,True
+104,Employee 104,22.0,HR,30000.0,0.0,,,2021-06-23,True
+105,Employee 105,56.0,Operations,112607.59,36.5,87.6,Chicago,2022-03-22,True
+106,Employee 106,55.0,Operations,101946.85,36.2,86.6,Miami,2022-04-08,True
+107,Employee 107,55.0,Operations,105772.67,34.0,85.9,Boston,,True
+108,Employee 108,50.0,HR,85432.45,29.9,96.6,Boston,2020-04-10,True
+109,Employee 109,42.0,Marketing,82110.11,22.5,75.5,Portland,2021-04-19,False
+110,Employee 110,,Marketing,102147.77,32.3,83.6,Chicago,2020-09-05,False
+111,Employee 111,33.0,HR,61263.02,12.2,93.1,Seattle,2022-10-15,False
+112,Employee 112,55.0,Marketing,100875.21,34.2,94.1,,2020-04-10,False
+113,Employee 113,45.0,Marketing,83162.75,24.0,72.6,New York,2022-01-24,False
+114,Employee 114,,Finance,66893.24,16.8,81.5,Denver,2022-11-28,False
+115,Employee 115,43.0,Sales,76219.77,22.4,94.9,Austin,2023-10-16,False
+116,Employee 116,46.0,Sales,81579.82,21.3,88.1,Austin,2021-02-24,True
+117,Employee 117,23.0,Marketing,44467.15,0.0,,New York,2020-01-12,False
+118,Employee 118,28.0,Sales,58398.59,8.6,82.3,Phoenix,2022-11-22,True
+119,Employee 119,32.0,Sales,49131.71,11.7,80.9,Boston,2020-01-03,False
+120,Employee 120,26.0,Marketing,45799.93,7.0,86.3,Chicago,2020-04-06,False
+121,Employee 121,40.0,HR,83851.64,17.5,,Miami,2023-12-17,True
+122,Employee 122,50.0,Sales,84051.29,25.7,83.7,New York,2023-06-13,True
+123,Employee 123,50.0,Sales,83422.0,27.5,84.6,Denver,2022-10-30,True
+124,Employee 124,42.0,Operations,500000.0,20.2,78.6,Boston,2023-05-04,True
+125,Employee 125,58.0,Engineering,111155.08,36.2,88.3,Denver,2020-04-20,False
+126,Employee 126,46.0,Finance,,26.3,100.0,Seattle,2020-05-09,False
+127,Employee 127,25.0,Operations,55631.68,2.3,69.8,Phoenix,2021-03-15,False
+128,Employee 128,54.0,Marketing,104054.35,32.7,86.6,Austin,2020-02-04,False
+129,Employee 129,46.0,Operations,89534.56,22.0,77.9,Portland,2023-07-20,True
+130,Employee 130,49.0,Engineering,92632.93,27.9,88.6,Miami,2020-03-23,True
+131,Employee 131,46.0,Engineering,101421.22,24.0,,Chicago,2022-03-05,False
+132,Employee 132,45.0,Sales,79358.71,21.5,90.1,Seattle,2023-05-31,False
+133,Employee 133,25.0,Finance,30000.0,2.5,93.4,Austin,2022-12-09,False
+134,Employee 134,46.0,Marketing,95634.03,23.6,85.5,San Francisco,2020-12-08,True
+135,Employee 135,56.0,Finance,97138.4,33.5,93.1,Phoenix,2021-11-17,False
+136,Employee 136,35.0,Finance,63863.04,16.5,65.2,Phoenix,2022-03-11,False
+137,Employee 137,47.0,Operations,95076.41,24.8,96.7,Austin,2023-01-26,True
+138,Employee 138,23.0,Engineering,,0.5,87.0,Portland,2021-09-14,True
+139,Employee 139,36.0,Sales,54786.82,9.8,92.6,Seattle,2021-02-20,True
+140,Employee 140,40.0,Operations,59189.78,16.2,74.2,Miami,2023-03-07,True
+141,Employee 141,64.0,Marketing,1.0,40.0,77.4,Boston,2023-07-18,True
+142,Employee 142,31.0,Finance,59317.09,7.6,85.2,Miami,2021-12-14,False
+143,Employee 143,33.0,Engineering,,13.8,83.9,Portland,2020-02-10,False
+144,Employee 144,39.0,Sales,72410.19,16.7,86.3,Phoenix,2021-12-31,True
+145,Employee 145,64.0,Finance,103897.87,40.0,92.7,Boston,2023-07-22,False
+146,Employee 146,58.0,Engineering,85919.17,36.1,69.9,Chicago,2023-12-15,False
+147,Employee 147,23.0,Finance,41834.83,1.1,91.8,Denver,2021-08-08,True
+148,Employee 148,32.0,Operations,53825.79,9.8,84.1,,2020-08-07,True
+149,Employee 149,57.0,HR,106275.09,35.0,82.4,Seattle,2022-04-15,True
+150,Employee 150,24.0,HR,48815.63,5.4,72.2,Denver,2023-04-27,False
+151,Employee 151,58.0,Sales,105505.93,31.4,88.0,San Francisco,2023-10-11,False
+152,Employee 152,34.0,HR,67281.06,8.0,64.7,Denver,2020-03-16,False
+153,Employee 153,61.0,Operations,111633.69,37.9,89.2,Miami,2021-02-28,False
+154,Employee 154,34.0,Operations,65440.52,12.0,72.1,,2021-11-28,True
+155,Employee 155,40.0,Operations,66362.61,19.4,84.4,Boston,2020-05-23,True
+156,Employee 156,50.0,Operations,88563.11,28.9,83.0,Portland,2023-07-18,False
+157,Employee 157,27.0,HR,50174.21,4.2,93.4,Chicago,2020-06-12,True
+158,Employee 158,45.0,HR,87564.23,25.0,82.6,New York,2022-08-29,True
+159,Employee 159,43.0,Finance,74250.07,23.1,78.4,New York,,True
+160,Employee 160,55.0,Finance,103169.34,33.4,79.9,Phoenix,2022-09-27,True
+161,Employee 161,64.0,Operations,113073.29,40.0,94.2,Portland,2023-01-19,True
+162,Employee 162,50.0,Sales,89059.66,28.5,88.3,Austin,2021-01-19,True
+163,Employee 163,39.0,Marketing,76836.15,15.9,80.9,Austin,2023-04-23,True
+164,Employee 164,39.0,Operations,54255.52,18.4,82.1,New York,2021-09-03,False
+165,Employee 165,39.0,Marketing,59828.22,17.2,71.5,Phoenix,2020-03-30,False
+166,Employee 166,57.0,Finance,90742.52,35.0,87.1,Seattle,2021-06-19,False
+167,Employee 167,35.0,Finance,44331.07,15.9,69.9,Miami,2021-05-25,False
+168,Employee 168,29.0,Marketing,46773.88,2.1,90.0,Austin,2022-01-31,False
+169,Employee 169,36.0,Engineering,70795.47,11.2,,Chicago,2021-01-21,True
+170,Employee 170,22.0,Sales,37320.93,0.0,100.0,Austin,2021-11-05,False
+171,Employee 171,26.0,Marketing,48382.32,3.3,75.2,San Francisco,2021-09-16,False
+172,Employee 172,25.0,Sales,53713.74,2.5,83.2,New York,2021-04-22,False
+173,Employee 173,55.0,Marketing,109621.49,30.0,98.4,Chicago,2022-10-13,True
+174,Employee 174,53.0,Sales,94846.9,29.0,93.5,Austin,2021-03-22,True
+175,Employee 175,51.0,Operations,102628.69,27.3,78.4,Austin,2023-01-23,False
+176,Employee 176,41.0,Marketing,74537.01,23.9,85.8,Seattle,2021-01-01,False
+177,Employee 177,,Finance,86900.81,33.6,84.0,Phoenix,2023-06-16,False
+178,Employee 178,28.0,Engineering,45644.8,5.2,86.3,Chicago,2021-06-16,False
+179,Employee 179,60.0,Sales,96155.71,37.3,78.4,Boston,2020-02-29,True
+180,Employee 180,43.0,Operations,70294.93,18.7,,Chicago,2020-08-06,True
+181,Employee 181,62.0,Sales,108735.87,36.2,71.2,Phoenix,2023-03-23,False
+182,Employee 182,28.0,Operations,56828.68,5.8,85.1,Chicago,2023-06-27,False
+183,Employee 183,43.0,Operations,91166.16,19.0,87.6,Chicago,2020-11-05,True
+184,Employee 184,51.0,Sales,80742.55,28.8,,Chicago,2022-05-29,True
+185,Employee 185,43.0,Marketing,80542.62,17.8,71.1,Chicago,2022-04-18,True
+186,Employee 186,41.0,Engineering,65475.65,17.5,,New York,2020-07-14,True
+187,Employee 187,,Engineering,55997.58,7.3,86.9,Portland,2021-10-21,False
+188,Employee 188,38.0,HR,67351.31,16.7,78.2,New York,2022-10-10,True
+189,Employee 189,32.0,Finance,42952.75,10.8,81.8,Austin,2023-11-13,False
+190,Employee 190,34.0,Sales,68626.38,9.4,72.0,Austin,2023-05-22,True
+191,Employee 191,51.0,Finance,86959.99,30.7,75.8,Austin,2020-05-22,False
+192,Employee 192,49.0,Engineering,83928.8,25.4,79.7,Miami,2020-12-12,True
+193,Employee 193,48.0,HR,77841.98,27.3,93.8,Denver,,False
+194,Employee 194,37.0,Operations,61365.73,15.0,78.9,Phoenix,2020-08-07,False
+195,Employee 195,63.0,Operations,116823.12,38.2,89.1,Chicago,2022-04-13,False
+196,Employee 196,25.0,Finance,43486.05,2.4,79.7,Phoenix,,False
+197,Employee 197,36.0,Sales,67429.3,14.7,86.0,New York,,False
+198,Employee 198,27.0,Sales,51495.37,6.2,82.9,Denver,2020-03-09,False
+199,Employee 199,36.0,Operations,75365.29,13.7,91.0,,2021-03-07,True
+200,Employee 200,63.0,Operations,110657.71,40.0,79.7,Denver,2023-01-17,True
+201,Employee 201,37.0,Marketing,54785.14,17.0,71.4,Phoenix,2020-09-15,True
+202,Employee 202,61.0,Finance,,38.5,72.9,,2023-12-12,True
+203,Employee 203,43.0,Marketing,74748.09,22.5,79.7,New York,2021-01-28,False
+204,Employee 204,52.0,HR,102516.74,33.9,74.0,Miami,2020-03-06,True
+205,Employee 205,41.0,Finance,76867.02,22.9,87.3,New York,2021-05-04,True
+206,Employee 206,33.0,Marketing,58350.9,8.5,80.3,Miami,2022-12-28,False
+207,Employee 207,54.0,Marketing,99990.21,30.1,100.0,Miami,2020-06-04,True
+208,Employee 208,63.0,Marketing,129008.1,40.0,70.1,San Francisco,2020-04-14,True
+209,Employee 209,33.0,Finance,76015.84,8.9,85.6,Boston,2023-05-25,False
+210,Employee 210,55.0,Finance,99555.05,30.4,75.0,San Francisco,2022-05-14,False
+211,Employee 211,33.0,Engineering,60681.52,10.0,80.1,Seattle,2021-05-16,False
+212,Employee 212,52.0,Marketing,102209.92,30.8,,Boston,2023-01-08,False
+213,Employee 213,55.0,Marketing,92234.71,32.8,65.4,Seattle,2023-05-17,False
+214,Employee 214,41.0,Operations,,17.7,85.9,Miami,2021-06-08,False
+215,Employee 215,53.0,Marketing,,29.7,99.2,Miami,2022-03-30,True
+216,Employee 216,33.0,Finance,61911.27,9.6,,San Francisco,2020-01-16,False
+217,Employee 217,25.0,Engineering,38333.05,1.2,86.1,Miami,2021-03-22,True
+218,Employee 218,26.0,HR,34083.46,8.6,92.2,,2022-05-18,True
+219,Employee 219,,Finance,57216.13,19.6,82.7,New York,2020-10-14,False
+220,Employee 220,60.0,Finance,99060.93,39.8,79.4,Phoenix,2023-12-18,False
+221,Employee 221,27.0,Finance,44930.6,4.0,65.8,Boston,2023-11-18,True
+222,Employee 222,41.0,Finance,71454.47,18.6,89.1,New York,2021-01-11,False
+223,Employee 223,52.0,Sales,109097.85,28.6,83.1,Phoenix,2021-08-01,False
+224,Employee 224,30.0,Engineering,62847.95,2.7,75.9,Phoenix,,False
+225,Employee 225,,HR,87703.27,28.2,85.0,Boston,2022-01-05,True
+226,Employee 226,35.0,Engineering,65781.67,9.4,79.3,Miami,2020-06-29,False
+227,Employee 227,56.0,HR,97543.37,29.5,79.8,New York,2021-07-24,True
+228,Employee 228,46.0,Sales,80525.09,21.6,88.9,New York,2022-03-21,False
+229,Employee 229,45.0,Engineering,82482.61,25.6,73.3,,2022-06-12,True
+230,Employee 230,29.0,Finance,57153.37,6.9,92.4,Portland,2022-05-20,False
+231,Employee 231,41.0,Engineering,,21.6,72.8,Seattle,2020-11-19,True
+232,Employee 232,58.0,Operations,112910.81,36.8,78.7,New York,2023-03-02,True
+233,Employee 233,22.0,Sales,30464.49,1.6,99.4,Portland,2022-10-06,True
+234,Employee 234,54.0,HR,97250.71,30.2,93.0,Miami,2023-01-04,False
+235,Employee 235,43.0,HR,98181.39,22.0,84.8,Miami,2021-11-14,True
+236,Employee 236,52.0,Engineering,95384.64,31.5,76.5,Miami,2023-07-27,False
+237,Employee 237,50.0,Finance,101465.72,26.8,79.8,San Francisco,2021-07-23,True
+238,Employee 238,40.0,Sales,72732.16,19.1,,Portland,,True
+239,Employee 239,35.0,Marketing,67646.22,14.1,84.3,Denver,2020-10-24,False
+240,Employee 240,48.0,Operations,85945.73,24.9,83.3,San Francisco,2020-12-27,False
+241,Employee 241,28.0,Finance,49036.74,3.8,83.8,Chicago,2022-02-08,True
+242,Employee 242,47.0,HR,78364.14,22.6,82.3,New York,2022-03-22,True
+243,Employee 243,26.0,Finance,50242.41,4.2,72.5,Miami,2022-12-25,True
+244,Employee 244,49.0,HR,81387.7,27.7,79.9,Austin,2021-03-10,False
+245,Employee 245,49.0,Operations,93524.68,25.4,91.3,Phoenix,2023-06-28,False
+246,Employee 246,25.0,HR,53682.3,3.1,73.1,Boston,2021-04-26,True
+247,Employee 247,54.0,Finance,100132.25,33.1,82.5,San Francisco,2022-02-18,False
+248,Employee 248,39.0,Marketing,67910.01,18.2,77.4,New York,2023-09-22,True
+249,Employee 249,55.0,Engineering,102631.72,36.1,84.9,Portland,2022-02-26,True
+250,Employee 250,23.0,Finance,38930.62,3.6,80.9,Boston,2022-09-22,False
+251,Employee 251,29.0,Finance,59684.38,5.0,95.8,Boston,2023-08-19,False
+252,Employee 252,43.0,HR,62748.75,24.4,,Austin,2023-11-23,True
+253,Employee 253,30.0,Engineering,51315.14,6.9,73.5,,2021-12-30,False
+254,Employee 254,36.0,Engineering,,16.1,89.4,Chicago,2021-08-31,True
+255,Employee 255,50.0,Engineering,78039.51,28.1,77.8,San Francisco,2020-10-14,False
+256,Employee 256,28.0,Finance,61310.9,5.2,79.4,Boston,2022-02-23,True
+257,Employee 257,51.0,Engineering,98961.48,25.4,86.5,New York,2023-09-02,True
+258,Employee 258,26.0,Operations,41044.16,3.7,80.1,San Francisco,2021-12-12,True
+259,Employee 259,,HR,40179.97,3.9,91.1,Seattle,2021-05-23,False
+260,Employee 260,47.0,Marketing,60883.77,26.9,77.8,Austin,2020-06-05,False
+261,Employee 261,,Sales,96452.04,37.0,79.0,San Francisco,2021-07-23,True
+262,Employee 262,,Finance,71563.32,5.4,78.7,San Francisco,,False
+263,Employee 263,34.0,Operations,64679.07,12.6,79.5,Phoenix,2023-11-27,False
+264,Employee 264,61.0,Engineering,105323.42,37.5,92.8,Boston,2022-02-09,True
+265,Employee 265,64.0,HR,118920.64,40.0,89.0,Miami,2020-07-19,False
+266,Employee 266,46.0,HR,70312.33,25.5,97.7,Chicago,2020-04-08,False
+267,Employee 267,,Engineering,71421.41,18.9,,Miami,2023-05-27,True
+268,Employee 268,36.0,HR,65595.82,17.5,75.8,Denver,2023-09-21,True
+269,Employee 269,48.0,HR,85711.19,25.0,84.6,New York,2023-01-18,True
+270,Employee 270,47.0,Sales,90926.45,27.0,74.6,Boston,,False
+271,Employee 271,34.0,HR,63957.16,12.2,77.8,Boston,2020-05-23,False
+272,Employee 272,22.0,Operations,,1.6,79.0,Austin,2020-10-16,True
+273,Employee 273,28.0,Sales,44893.02,5.1,75.5,Chicago,2023-01-01,True
+274,Employee 274,63.0,Operations,120582.52,40.0,75.6,Denver,2023-01-22,True
+275,Employee 275,39.0,Engineering,83231.5,16.8,82.8,,2023-05-08,True
+276,Employee 276,42.0,Operations,67838.8,18.3,74.3,Seattle,2020-05-21,True
+277,Employee 277,42.0,Marketing,68498.43,21.3,90.7,Miami,2020-08-11,True
+278,Employee 278,,Operations,109686.27,34.3,76.7,Chicago,2023-08-07,False
+279,Employee 279,24.0,Finance,41669.25,3.2,100.0,Portland,2023-09-17,True
+280,Employee 280,25.0,Operations,56230.57,6.1,80.4,Denver,2022-11-25,False
+281,Employee 281,33.0,Marketing,55859.71,13.9,84.6,Denver,,True
+282,Employee 282,42.0,Engineering,87240.36,19.3,73.6,Boston,2020-04-10,True
+283,Employee 283,50.0,Finance,91051.89,28.7,97.6,Boston,2020-03-22,False
+284,Employee 284,43.0,Engineering,79465.83,19.8,93.0,San Francisco,2022-10-07,False
+285,Employee 285,40.0,Operations,84517.74,18.0,86.4,Phoenix,2023-05-20,False
+286,Employee 286,62.0,HR,108705.84,38.8,73.2,Austin,2022-07-11,False
+287,Employee 287,,HR,42871.02,9.2,85.7,Portland,2021-01-17,True
+288,Employee 288,46.0,Marketing,79211.49,24.7,75.0,Phoenix,2023-01-10,True
+289,Employee 289,45.0,Finance,84618.67,22.6,95.7,New York,2020-03-27,False
+290,Employee 290,42.0,Engineering,63073.93,22.4,90.5,Miami,2023-04-24,False
+291,Employee 291,56.0,Sales,105899.77,29.7,84.8,Boston,2023-07-26,False
+292,Employee 292,33.0,Operations,55089.83,7.0,64.5,Phoenix,2022-11-14,False
+293,Employee 293,63.0,Sales,,40.0,,Denver,2023-07-07,True
+294,Employee 294,36.0,Marketing,45645.92,14.1,,San Francisco,2022-05-05,True
+295,Employee 295,45.0,Finance,74707.47,23.5,93.7,Seattle,2021-11-14,True
+296,Employee 296,44.0,Marketing,65708.25,19.3,,Seattle,2021-04-15,False
+297,Employee 297,58.0,Marketing,97790.16,36.0,71.3,Phoenix,2023-09-07,False
+298,Employee 298,40.0,Engineering,73981.33,22.0,86.4,Denver,2022-10-15,True
+299,Employee 299,34.0,Engineering,59766.19,13.6,92.1,Denver,2020-10-05,False
+300,Employee 300,22.0,HR,37572.98,0.3,70.7,Seattle,2023-10-29,False
+301,Employee 301,37.0,Finance,65326.52,14.1,83.9,Austin,2020-03-27,True
+302,Employee 302,57.0,Engineering,104227.11,34.2,86.2,San Francisco,2022-05-07,True
+303,Employee 303,22.0,Engineering,31531.71,0.0,81.6,Chicago,,False
+304,Employee 304,60.0,Operations,113654.8,38.5,69.2,Denver,2022-08-27,False
+305,Employee 305,45.0,Finance,,24.7,81.4,Chicago,,True
+306,Employee 306,28.0,Marketing,53480.3,2.8,81.4,Austin,2021-09-30,True
+307,Employee 307,34.0,Marketing,65652.27,10.7,,Seattle,2022-09-07,True
+308,Employee 308,45.0,Sales,83371.34,20.7,79.5,Phoenix,2023-01-08,False
+309,Employee 309,35.0,Sales,79280.59,11.1,80.5,Phoenix,2021-07-08,True
+310,Employee 310,26.0,HR,46103.25,4.1,83.7,,2023-12-27,False
+311,Employee 311,50.0,Operations,87543.33,23.8,87.5,Chicago,2021-12-28,True
+312,Employee 312,,Finance,83971.78,29.2,,Denver,2020-08-22,True
+313,Employee 313,27.0,Operations,40341.9,6.5,80.7,Chicago,2020-01-10,True
+314,Employee 314,34.0,Finance,51244.23,11.5,84.7,Miami,2020-10-22,False
+315,Employee 315,32.0,Engineering,50489.62,5.0,68.6,Austin,2022-10-05,True
+316,Employee 316,50.0,Sales,89434.56,26.0,87.8,New York,2022-02-26,False
+317,Employee 317,53.0,Engineering,98074.36,33.5,84.0,Chicago,2021-05-08,True
+318,Employee 318,53.0,Sales,95809.14,25.4,84.3,Denver,2021-12-03,False
+319,Employee 319,62.0,Engineering,105475.72,39.3,91.7,Seattle,,True
+320,Employee 320,55.0,HR,106201.48,30.6,68.4,,2022-04-14,True
+321,Employee 321,35.0,Marketing,68915.3,14.6,68.2,New York,2020-03-25,False
+322,Employee 322,26.0,Operations,45522.81,2.6,86.2,New York,2020-03-12,False
+323,Employee 323,48.0,Finance,81176.67,26.8,83.9,Denver,2021-12-04,False
+324,Employee 324,61.0,Engineering,114187.42,40.0,85.4,Denver,2021-08-13,True
+325,Employee 325,0.0,HR,41103.79,3.7,80.3,Austin,2023-05-26,False
+326,Employee 326,31.0,Operations,44214.98,8.6,89.3,Austin,2022-05-01,True
+327,Employee 327,32.0,Sales,57056.16,10.8,91.5,New York,2023-01-10,False
+328,Employee 328,,Engineering,43496.29,0.0,87.9,,2022-05-04,False
+329,Employee 329,28.0,Finance,43202.44,8.4,81.9,Chicago,2021-05-19,False
+330,Employee 330,45.0,HR,82518.75,21.5,67.1,Seattle,2022-08-17,False
+331,Employee 331,45.0,HR,69361.42,21.9,90.2,Chicago,2022-06-26,False
+332,Employee 332,37.0,Operations,77289.49,15.0,93.8,Phoenix,2022-11-17,False
+333,Employee 333,35.0,Marketing,,9.9,89.2,Austin,2020-10-03,True
+334,Employee 334,57.0,HR,100579.86,35.5,77.0,San Francisco,2022-07-25,True
+335,Employee 335,41.0,Marketing,76707.63,20.9,89.4,Austin,2021-02-20,False
+336,Employee 336,56.0,Finance,,34.6,90.9,Seattle,2023-02-27,False
+337,Employee 337,63.0,Engineering,104149.22,37.8,96.5,Austin,2023-03-11,False
+338,Employee 338,35.0,Finance,60649.77,12.8,77.0,Chicago,2022-07-01,False
+339,Employee 339,30.0,HR,,9.5,82.2,Seattle,2023-10-14,True
+340,Employee 340,62.0,HR,117315.17,36.2,90.0,Denver,2022-02-23,True
+341,Employee 341,49.0,Operations,104178.37,24.9,84.5,Chicago,2020-02-06,False
+342,Employee 342,,Sales,51787.08,13.8,75.1,Miami,2022-06-04,False
+343,Employee 343,48.0,Engineering,79700.29,26.5,87.3,Boston,2023-02-09,True
+344,Employee 344,44.0,Operations,81083.59,22.8,88.6,Boston,,True
+345,Employee 345,,Marketing,120888.93,40.0,84.7,Boston,2020-06-01,True
+346,Employee 346,33.0,Operations,49621.01,11.9,85.8,Seattle,2021-02-02,True
+347,Employee 347,64.0,Sales,117192.29,40.0,81.9,Miami,2023-05-17,False
+348,Employee 348,62.0,Finance,126170.39,40.0,95.8,Seattle,2022-02-09,False
+349,Employee 349,29.0,Marketing,38985.93,6.6,76.8,Miami,2023-11-26,False
+350,Employee 350,29.0,Marketing,41951.45,5.4,79.3,Phoenix,2023-06-28,False
+351,Employee 351,44.0,Sales,75811.15,22.9,84.1,Miami,2022-03-21,True
+352,Employee 352,23.0,HR,37235.29,1.9,91.0,Boston,2022-09-18,True
+353,Employee 353,34.0,HR,67700.81,10.9,72.0,Chicago,2021-04-28,True
+354,Employee 354,40.0,HR,73933.28,15.9,73.5,San Francisco,2020-05-11,True
+355,Employee 355,63.0,HR,99200.3,40.0,67.7,Austin,2021-08-05,False
+356,Employee 356,64.0,Engineering,119323.28,40.0,84.3,Boston,2022-05-14,True
+357,Employee 357,28.0,Engineering,45779.69,4.5,75.1,Miami,2020-09-23,True
+358,Employee 358,60.0,Operations,118195.58,39.8,80.9,Phoenix,2020-11-19,False
+359,Employee 359,25.0,Engineering,39979.3,2.8,89.3,Phoenix,2020-01-22,False
+360,Employee 360,54.0,Operations,92107.08,31.5,78.9,New York,2022-12-07,True
+361,Employee 361,58.0,Engineering,108729.05,37.1,85.9,San Francisco,2023-08-06,True
+362,Employee 362,,Sales,114103.41,35.4,81.6,Seattle,2023-04-23,False
+363,Employee 363,31.0,HR,59384.79,9.7,89.4,Denver,2021-07-08,False
+364,Employee 364,60.0,Marketing,94515.22,40.0,87.8,Phoenix,2022-05-16,False
+365,Employee 365,26.0,HR,51104.28,4.9,78.5,Portland,2023-11-03,True
+366,Employee 366,44.0,Finance,70925.54,21.2,82.7,Phoenix,,True
+367,Employee 367,42.0,Finance,77482.21,19.0,92.3,Chicago,2021-03-07,True
+368,Employee 368,35.0,Marketing,51610.12,12.2,87.1,Chicago,2021-05-09,False
+369,Employee 369,22.0,Finance,43170.58,0.0,72.8,Chicago,2022-11-27,False
+370,Employee 370,55.0,Marketing,92547.21,32.2,89.2,Chicago,2021-10-13,False
+371,Employee 371,36.0,Sales,54538.92,15.8,75.3,Portland,2023-05-07,False
+372,Employee 372,50.0,Finance,95710.56,24.5,95.3,Boston,2023-06-15,False
+373,Employee 373,39.0,Finance,,18.7,92.2,,2020-02-22,True
+374,Employee 374,38.0,Engineering,63488.19,15.2,,Boston,2022-11-22,True
+375,Employee 375,60.0,Finance,,38.8,,Chicago,2021-06-24,False
+376,Employee 376,26.0,Engineering,43274.78,1.7,82.3,Seattle,2022-01-28,True
+377,Employee 377,53.0,HR,95656.86,33.7,89.4,Denver,2021-01-21,True
+378,Employee 378,54.0,Operations,99351.31,34.5,81.0,San Francisco,2021-06-21,True
+379,Employee 379,38.0,Engineering,63442.67,17.9,85.9,San Francisco,2021-04-27,True
+380,Employee 380,33.0,Finance,63169.09,8.0,91.0,Austin,2020-03-14,False
+381,Employee 381,22.0,Operations,35332.38,1.7,79.5,Boston,2023-02-16,False
+382,Employee 382,62.0,Operations,108306.89,40.0,79.1,Miami,2020-07-27,False
+383,Employee 383,62.0,Engineering,122501.14,36.8,74.4,Portland,2021-07-02,True
+384,Employee 384,32.0,Engineering,49275.31,10.0,,New York,2020-10-08,True
+385,Employee 385,23.0,Finance,30000.0,1.7,69.4,Denver,2020-08-22,True
+386,Employee 386,27.0,Marketing,61487.5,6.1,89.8,New York,2021-06-29,True
+387,Employee 387,24.0,Operations,63594.62,2.4,98.5,Seattle,2023-09-03,False
+388,Employee 388,57.0,HR,99357.85,35.6,95.4,Portland,2023-10-10,False
+389,Employee 389,60.0,Engineering,92505.3,40.0,71.0,Seattle,2021-07-11,False
+390,Employee 390,28.0,HR,47916.13,8.5,89.8,Chicago,2022-01-07,True
+391,Employee 391,54.0,Operations,94910.22,26.3,95.4,Denver,2023-12-10,False
+392,Employee 392,29.0,Engineering,50680.61,6.4,80.3,Portland,2020-12-08,True
+393,Employee 393,37.0,Finance,57692.9,14.7,84.8,Boston,2023-10-11,True
+394,Employee 394,47.0,Engineering,89236.49,21.5,67.9,New York,2020-06-03,False
+395,Employee 395,52.0,Engineering,97796.06,30.2,86.1,Miami,2020-11-25,True
+396,Employee 396,59.0,Operations,94244.76,39.5,75.5,Phoenix,2021-05-08,True
+397,Employee 397,23.0,Engineering,46993.57,0.0,85.6,San Francisco,2020-02-24,False
+398,Employee 398,,HR,70421.48,8.7,71.5,Miami,2023-04-05,True
+399,Employee 399,34.0,Operations,62575.68,10.2,88.3,Boston,2023-06-02,False
+400,Employee 400,35.0,Marketing,60301.4,11.7,92.2,San Francisco,2021-07-13,True
+401,Employee 401,64.0,Engineering,114063.97,40.0,77.7,Boston,2023-05-06,False
+402,Employee 402,55.0,Finance,103922.05,31.9,74.9,Seattle,2023-02-01,True
+403,Employee 403,35.0,Operations,49154.63,13.9,66.8,San Francisco,2023-03-16,True
+404,Employee 404,63.0,Finance,114715.13,37.3,81.9,Chicago,2023-03-17,False
+405,Employee 405,43.0,Marketing,74276.29,24.7,79.3,Phoenix,2022-04-17,True
+406,Employee 406,,Marketing,92182.6,22.2,71.6,Chicago,2020-06-10,False
+407,Employee 407,40.0,Marketing,70606.62,17.6,87.6,,2023-09-10,True
+408,Employee 408,28.0,HR,63743.1,7.2,80.4,Denver,2022-06-07,False
+409,Employee 409,62.0,Operations,102770.07,37.2,75.4,Boston,2023-08-08,False
+410,Employee 410,22.0,Operations,44298.07,2.4,79.6,Austin,2023-11-01,True
+411,Employee 411,29.0,Engineering,54755.2,6.4,92.6,San Francisco,2020-09-30,True
+412,Employee 412,31.0,Sales,48847.62,8.6,88.8,New York,2021-08-10,False
+413,Employee 413,34.0,Sales,62619.17,11.0,83.0,,2020-10-08,False
+414,Employee 414,27.0,Sales,58300.15,3.8,89.0,Chicago,2020-03-15,True
+415,Employee 415,22.0,Finance,37009.67,1.4,74.7,Denver,2023-11-11,True
+416,Employee 416,51.0,Finance,78264.3,29.5,84.3,Austin,2023-09-10,False
+417,Employee 417,63.0,Operations,113259.5,40.0,85.2,Portland,2023-09-22,False
+418,Employee 418,,Engineering,,5.0,80.2,Chicago,2023-07-14,True
+419,Employee 419,34.0,Sales,58461.27,13.0,87.5,Seattle,2022-08-05,True
+420,Employee 420,43.0,Operations,76747.3,20.2,77.8,Seattle,2022-02-01,False
+421,Employee 421,61.0,Sales,96154.78,40.0,88.1,Portland,2023-12-18,True
+422,Employee 422,51.0,Finance,78874.73,25.9,88.4,Austin,2022-03-17,True
+423,Employee 423,54.0,Marketing,101056.53,34.5,60.7,Chicago,2022-07-26,False
+424,Employee 424,,Engineering,78618.25,26.7,93.5,Portland,2020-11-05,True
+425,Employee 425,39.0,Operations,49682.05,15.3,59.6,Chicago,2022-12-26,False
+426,Employee 426,30.0,Finance,60278.75,12.5,79.1,Chicago,2023-04-11,True
+427,Employee 427,59.0,Engineering,108378.96,39.0,92.2,Austin,2022-09-17,False
+428,Employee 428,56.0,Sales,95089.0,35.9,81.5,Chicago,2021-12-28,True
+429,Employee 429,23.0,Marketing,30865.36,1.1,72.3,Portland,2020-10-15,False
+430,Employee 430,52.0,Marketing,100286.46,29.6,75.3,Denver,2020-02-19,True
+431,Employee 431,25.0,Engineering,47794.8,2.6,92.2,Phoenix,2022-07-04,True
+432,Employee 432,53.0,Sales,114460.82,31.8,68.6,Miami,2022-09-24,False
+433,Employee 433,57.0,Marketing,105961.51,37.8,93.0,New York,,False
+434,Employee 434,-3.0,Sales,42701.63,0.4,83.6,Chicago,2023-10-19,False
+435,Employee 435,40.0,Sales,70664.58,16.2,74.5,Austin,2021-12-27,True
+436,Employee 436,27.0,HR,55134.21,6.6,79.3,Denver,2023-04-25,True
+437,Employee 437,46.0,HR,87800.68,25.8,75.9,Austin,2022-11-11,False
+438,Employee 438,61.0,Operations,119813.8,40.0,90.9,Phoenix,2021-02-08,False
+439,Employee 439,25.0,Marketing,40829.42,4.5,89.9,Austin,2023-05-18,True
+440,Employee 440,39.0,Finance,66716.74,16.5,70.2,Denver,2020-03-18,False
+441,Employee 441,63.0,HR,109567.17,39.1,80.8,Seattle,2022-05-24,False
+442,Employee 442,34.0,Marketing,67526.41,10.3,,Phoenix,2023-10-04,False
+443,Employee 443,27.0,Sales,60587.0,1.7,94.3,Phoenix,2022-08-20,False
+444,Employee 444,43.0,Engineering,73729.28,21.5,73.2,Miami,2023-09-30,False
+445,Employee 445,43.0,Marketing,74001.81,20.8,96.8,,2020-03-22,False
+446,Employee 446,50.0,Operations,92512.62,27.1,83.7,New York,2022-02-16,False
+447,Employee 447,35.0,HR,61033.91,7.1,74.7,Miami,2023-02-13,False
+448,Employee 448,63.0,HR,121016.43,38.5,78.6,Boston,2022-07-26,False
+449,Employee 449,44.0,Operations,61185.78,24.2,77.6,Phoenix,2023-07-09,True
+450,Employee 450,,Engineering,54586.36,10.7,73.8,Portland,2021-11-06,False
+451,Employee 451,63.0,Finance,107140.67,40.0,84.8,Denver,2022-09-23,False
+452,Employee 452,61.0,Finance,91237.15,36.2,74.2,Phoenix,2021-09-04,False
+453,Employee 453,43.0,Sales,69690.89,23.9,66.6,San Francisco,2023-06-27,False
+454,Employee 454,23.0,Engineering,34078.75,0.7,81.0,Boston,2020-06-23,True
+455,Employee 455,47.0,Finance,82991.16,25.6,69.6,New York,,False
+456,Employee 456,45.0,Engineering,89903.73,27.7,,New York,2020-05-21,True
+457,Employee 457,28.0,Sales,,9.0,76.7,Boston,2022-10-22,True
+458,Employee 458,49.0,Marketing,79953.49,26.4,77.0,Denver,2020-12-05,True
+459,Employee 459,58.0,Finance,103944.36,34.8,100.0,New York,2021-04-08,False
+460,Employee 460,26.0,Finance,55193.39,3.3,84.5,,2023-05-06,False
+461,Employee 461,53.0,Engineering,87592.33,32.0,86.0,Miami,2021-06-09,False
+462,Employee 462,28.0,Operations,43115.4,5.8,69.8,Miami,2020-07-31,True
+463,Employee 463,54.0,Marketing,101668.39,31.2,78.8,New York,2020-01-31,True
+464,Employee 464,40.0,HR,70227.71,20.9,85.7,Denver,2020-11-26,False
+465,Employee 465,22.0,Finance,44779.88,0.0,75.8,New York,2023-08-28,True
+466,Employee 466,63.0,Sales,113290.83,40.0,91.3,Miami,2022-03-11,False
+467,Employee 467,29.0,Sales,57813.31,7.2,74.4,San Francisco,2023-12-23,False
+468,Employee 468,47.0,Finance,76319.38,28.6,81.7,,2020-11-10,False
+469,Employee 469,29.0,HR,52103.32,7.7,79.3,Denver,2021-05-28,True
+470,Employee 470,62.0,Marketing,109914.48,40.0,85.3,Portland,2020-08-26,True
+471,Employee 471,53.0,Marketing,85672.87,29.6,78.9,Phoenix,2021-08-04,True
+472,Employee 472,56.0,Marketing,88292.18,32.3,81.8,Portland,2022-04-02,False
+473,Employee 473,40.0,Engineering,77485.99,18.9,82.1,Boston,2023-03-25,True
+474,Employee 474,42.0,Finance,72792.38,22.0,78.1,Miami,2021-06-21,False
+475,Employee 475,49.0,Marketing,80021.76,27.1,87.9,Denver,2023-01-31,True
+476,Employee 476,55.0,Operations,98230.57,30.4,85.9,San Francisco,2022-07-03,True
+477,Employee 477,58.0,Marketing,113424.15,33.3,83.3,Denver,2021-03-02,True
+478,Employee 478,22.0,Finance,30000.0,0.0,80.6,San Francisco,2023-08-24,False
+479,Employee 479,50.0,Marketing,78026.89,24.5,90.4,New York,2021-09-25,False
+480,Employee 480,26.0,HR,39416.91,4.2,82.1,New York,2020-08-08,True
+481,Employee 481,200.0,Engineering,128689.43,40.0,81.5,New York,2023-11-06,False
+482,Employee 482,57.0,Sales,104860.7,35.0,84.8,Denver,,False
+483,Employee 483,32.0,Operations,63738.54,5.5,97.6,,2020-03-13,False
+484,Employee 484,56.0,Operations,91678.71,33.6,73.3,Austin,2023-08-10,False
+485,Employee 485,41.0,Marketing,64843.71,18.7,90.2,Seattle,2023-10-15,True
+486,Employee 486,,Engineering,61182.51,14.2,68.9,,2023-04-25,True
+487,Employee 487,36.0,Operations,65266.19,11.1,85.7,Miami,2021-01-07,False
+488,Employee 488,44.0,Finance,83589.91,21.2,96.6,Portland,2022-07-10,True
+489,Employee 489,54.0,HR,95698.63,35.4,87.9,Boston,2022-02-24,True
+490,Employee 490,48.0,Operations,88625.15,26.9,85.4,,2022-06-24,True
+491,Employee 491,62.0,Sales,112864.95,40.0,79.5,New York,,False
+492,Employee 492,59.0,Sales,112422.14,37.2,84.2,Seattle,2022-07-22,True
+493,Employee 493,54.0,HR,103656.07,32.7,82.0,San Francisco,2022-01-20,True
+494,Employee 494,47.0,Operations,71641.02,26.6,77.7,Chicago,2022-10-05,False
+495,Employee 495,34.0,Finance,43221.85,10.4,81.7,Miami,2022-02-07,True
+496,Employee 496,39.0,Marketing,78213.96,18.8,85.6,Miami,2020-01-25,True
+497,Employee 497,27.0,Sales,58101.8,2.3,77.9,Chicago,2020-02-21,True
+498,Employee 498,38.0,Marketing,60235.02,16.7,77.5,Austin,2023-10-30,True
+499,Employee 499,61.0,HR,94921.32,39.4,73.1,Portland,2023-08-20,False
+500,Employee 500,40.0,HR,72792.28,16.8,87.1,New York,2022-05-04,False
