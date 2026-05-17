@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import logging
 
 from app.config import APP_NAME, APP_VERSION, APP_DESCRIPTION, HOST, PORT
-from app.routes import health, scan, scrape
+from app.routes import health, scan, scrape, clean
 
 logging.basicConfig(
     level=logging.INFO,
@@ -42,6 +43,7 @@ app.add_middleware(
 app.include_router(health.router, tags=["Health"])
 app.include_router(scan.router, tags=["Scan"])
 app.include_router(scrape.router, tags=["Scrape"])
+app.include_router(clean.router, tags=["Clean"])
 
 _PAGE = """<!DOCTYPE html>
 <html lang="en">
@@ -119,6 +121,15 @@ _PAGE = """<!DOCTYPE html>
     .col-samples { font-size: .72rem; color: #475569; margin-top: .5rem; }
 
     .section-title { font-size: .8rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .75rem; }
+
+    /* Suggestions */
+    .suggestion-card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; }
+    .suggestion-icon { flex-shrink: 0; font-size: 1.5rem; }
+    .suggestion-body { flex-grow: 1; }
+    .suggestion-title { font-weight: 700; color: #f1f5f9; font-size: .9rem; margin-bottom: .2rem; }
+    .suggestion-desc { font-size: .85rem; color: #94a3b8; line-height: 1.5; }
+    .suggestion-actions { flex-shrink: 0; display: flex; gap: .5rem; }
+
     .mb { margin-bottom: 1.25rem; }
     .gap { margin-bottom: 1rem; }
     .link { color: #818cf8; font-size: .82rem; text-decoration: none; }
@@ -207,6 +218,13 @@ _PAGE = """<!DOCTYPE html>
     return '#ef4444';
   }
 
+  function getIconForIssue(issueType) {
+    if (issueType.includes('Missing')) return '💧';
+    if (issueType.includes('Outlier')) return '⚡️';
+    if (issueType.includes('Inconsistent')) return '🎭';
+    return '🔧';
+  }
+
   function showLoading(msg) {
     const el = document.getElementById('results');
     el.style.display = 'block';
@@ -222,6 +240,8 @@ _PAGE = """<!DOCTYPE html>
 
   // ── render ───────────────────────────────────────────────────────────────────
   function renderResults(data) {
+    window.currentScanData = data; // Store data globally for actions
+
     const color = healthColor(data.health_score);
 
     const statsHtml = [
@@ -229,7 +249,7 @@ _PAGE = """<!DOCTYPE html>
       { val: data.total_columns, key: 'Columns' },
       { val: data.null_percentage + '%', key: 'Missing' },
       { val: data.outlier_count, key: 'Outliers' },
-      { val: data.processing_time_ms + 'ms', key: 'Scan time' },
+      { val: (data.anomaly_score * 100).toFixed(1) + '%', key: 'Anomalies (ML)' },
     ].map(s => `<div class="stat"><div class="stat-val">${s.val}</div><div class="stat-key">${s.key}</div></div>`).join('');
 
     const recsHtml = data.recommendations.map(r => `<div class="rec">${r}</div>`).join('');
@@ -251,6 +271,23 @@ _PAGE = """<!DOCTYPE html>
         <div class="null-track"><div class="null-fill" style="width:${nullW}%"></div></div>
         <div class="col-meta">${tags}</div>
         ${samples ? `<div class="col-samples">e.g. ${samples}</div>` : ''}
+      </div>`;
+    }).join('');
+
+    const suggestionsHtml = data.suggestions.map(s => {
+      const actionsHtml = s.suggested_actions.map(action =>
+        `<button class="btn btn-ghost" onclick='applyFix(this, ${JSON.stringify(action)})'>
+          ${action.description}
+        </button>`
+      ).join('');
+
+      return `<div class="suggestion-card">
+        <div class="suggestion-icon">${getIconForIssue(s.issue_type)}</div>
+        <div class="suggestion-body">
+          <div class="suggestion-title">${s.issue_type} in <code>${s.column}</code></div>
+          <div class="suggestion-desc">${s.description}</div>
+        </div>
+        <div class="suggestion-actions">${actionsHtml}</div>
       </div>`;
     }).join('');
 
@@ -276,6 +313,11 @@ _PAGE = """<!DOCTYPE html>
       <div class="section-title mb">What DataSnoop found</div>
       <div class="mb">${recsHtml}</div>
 
+      ${suggestionsHtml ? `
+        <div class="section-title mb">Actionable Suggestions</div>
+        <div class="mb">${suggestionsHtml}</div>
+      ` : ''}
+
       <div class="section-title mb">Column breakdown</div>
       <div class="col-grid">${colsHtml}</div>
     `;
@@ -298,6 +340,46 @@ _PAGE = """<!DOCTYPE html>
       if (!r.ok) throw new Error(await r.text());
       renderResults(await r.json());
     } catch(e) { showError('Could not fetch ' + name + ': ' + e.message); }
+  }
+
+  async function applyFix(btn, action) {
+    const fileId = window.currentScanData?.file_id;
+    if (!fileId) {
+      showError("Cannot apply fix: no file ID found. Please re-upload the file.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Applying...';
+
+    try {
+      const response = await fetch('/api/v1/clean/file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file_id: fileId, actions: [action] })
+      });
+
+      if (!response.ok) throw new Error((await response.json()).detail);
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `cleaned_${fileId.substring(0,8)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      btn.textContent = '✅ Downloaded';
+
+    } catch (e) {
+      btn.textContent = '❌ Failed';
+      alert('Failed to apply fix: ' + e.message);
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = action.description;
+      }, 2000);
+    }
   }
 
   async function uploadFile(file) {

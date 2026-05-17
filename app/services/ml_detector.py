@@ -1,78 +1,48 @@
-import numpy as np
 import pandas as pd
+import numpy as np
 from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import logging
-
-from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-
-class AnomalyDetector:
-    def __init__(self) -> None:
-        self.model: Optional[IsolationForest] = None
-        self.scaler: Optional[StandardScaler] = None
+class MLAnomalyDetector:
+    """
+    A wrapper for using IsolationForest to detect anomalies in a DataFrame.
+    """
+    def __init__(self, contamination='auto', random_state=42):
+        self.model = IsolationForest(contamination=contamination, random_state=random_state, n_jobs=-1)
         self.is_trained = False
-        self.feature_columns: list = []
+        self.numeric_columns = []
 
-    def train(self, df: pd.DataFrame) -> Dict[str, Any]:
-        numeric_df = df.select_dtypes(include=[np.number])
-        if numeric_df.empty:
-            return {"success": False, "error": "No numeric columns found"}
-        if len(numeric_df) < 10:
-            return {"success": False, "error": "Need at least 10 rows to train"}
+    def train(self, df: pd.DataFrame):
+        """Trains the Isolation Forest model on the numeric columns of the DataFrame."""
+        self.numeric_columns = df.select_dtypes(include=np.number).columns.tolist()
+        if not self.numeric_columns:
+            logger.info("No numeric columns found for ML anomaly detection.")
+            self.is_trained = False
+            return
 
-        self.feature_columns = list(numeric_df.columns)
-        numeric_df = numeric_df.fillna(numeric_df.mean())
+        # Simple imputation for training
+        train_data = df[self.numeric_columns].fillna(df[self.numeric_columns].median())
+        
+        if train_data.empty:
+            self.is_trained = False
+            return
 
-        self.scaler = StandardScaler()
-        X = self.scaler.fit_transform(numeric_df)
-
-        self.model = IsolationForest(
-            contamination=settings.ANOMALY_CONTAMINATION,
-            random_state=settings.RANDOM_SEED,
-            n_estimators=100,
-        )
-        self.model.fit(X)
+        self.model.fit(train_data)
         self.is_trained = True
-
-        return {
-            "success": True,
-            "n_samples": len(numeric_df),
-            "n_features": len(self.feature_columns),
-        }
+        logger.info(f"Trained ML anomaly detector on columns: {self.numeric_columns}")
 
     def predict(self, df: pd.DataFrame) -> Dict[str, Any]:
-        if not self.is_trained or self.model is None:
-            return {"is_trained": False, "anomaly_ratio": 0.0, "status": "NOT_TRAINED"}
+        """Predicts anomalies and returns the anomaly ratio and count."""
+        if not self.is_trained or not self.numeric_columns:
+            return {"anomaly_count": 0, "anomaly_ratio": 0.0}
 
-        available = [c for c in self.feature_columns if c in df.columns]
-        if not available:
-            return {"is_trained": True, "anomaly_ratio": 0.0, "status": "NO_MATCHING_FEATURES"}
+        predict_data = df[self.numeric_columns].fillna(df[self.numeric_columns].median())
+        predictions = self.model.predict(predict_data)
+        anomaly_count = int((predictions == -1).sum())
+        anomaly_ratio = anomaly_count / len(df) if len(df) > 0 else 0.0
+        return {"anomaly_count": anomaly_count, "anomaly_ratio": anomaly_ratio}
 
-        X = df[available].fillna(df[available].mean())
-        X_scaled = self.scaler.transform(X)
-        preds = self.model.predict(X_scaled)
-
-        anomaly_count = int((preds == -1).sum())
-        anomaly_ratio = round(anomaly_count / len(preds), 4)
-
-        if anomaly_ratio > 0.2:
-            status = "HIGH_ANOMALIES"
-        elif anomaly_ratio > 0.05:
-            status = "MODERATE_ANOMALIES"
-        else:
-            status = "CLEAN"
-
-        return {
-            "is_trained": True,
-            "anomaly_ratio": anomaly_ratio,
-            "anomaly_count": anomaly_count,
-            "total_rows": len(preds),
-            "status": status,
-        }
-
-
-ml_model = AnomalyDetector()
+ml_model = MLAnomalyDetector()

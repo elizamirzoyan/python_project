@@ -1,15 +1,18 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
 from datetime import datetime
 from pathlib import Path
 from typing import List
 import tempfile
 import os
 import time
+import uuid
 import gc
 import pandas as pd
 import logging
 
 from app.models.schemas import ScanReport, Dataset
+# We will assume analyzer.py is updated to return a more detailed analysis
+# including actionable suggestions.
 from app.services.analyzer import analyze_dataframe
 from app.services.validator import validate_extension, validate_size, validate_csv
 
@@ -17,6 +20,13 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 _DATA_DIR = Path(__file__).parent.parent.parent / "data"
+_TEMP_DIR = Path(tempfile.gettempdir()) / "datasnoop_uploads"
+_TEMP_DIR.mkdir(exist_ok=True)
+
+
+def cleanup_file(path: str):
+    """Utility to remove a file in the background."""
+    os.unlink(path)
 
 
 # ── Demo ──────────────────────────────────────────────────────────────────────
@@ -107,7 +117,7 @@ async def analyze_local_dataset(name: str):
 # ── File upload ───────────────────────────────────────────────────────────────
 
 @router.post("/api/v1/scan/file", response_model=ScanReport, summary="Upload & analyze your CSV")
-async def scan_file(file: UploadFile = File(...)):
+async def scan_file(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     """
     Upload a CSV file and DataSnoop will analyze it — checking for missing values,
     outliers, and overall data quality. You'll get a per-column breakdown and
@@ -127,12 +137,12 @@ async def scan_file(file: UploadFile = File(...)):
 
     start = time.time()
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp:
-        tmp.write(content)
-        tmp_path = tmp.name
+    # Save file with a unique ID to be referenced later for cleaning
+    file_id = str(uuid.uuid4())
+    tmp_path = str(_TEMP_DIR / f"{file_id}.csv")
+    Path(tmp_path).write_bytes(content)
 
     try:
-        # Validate CSV structure
         ok, err = validate_csv(tmp_path)
         if not ok:
             raise HTTPException(status_code=400, detail=err)
@@ -148,15 +158,21 @@ async def scan_file(file: UploadFile = File(...)):
         return ScanReport(
             success=True,
             dataset_name=file.filename or "upload.csv",
+            file_id=file_id,  # Return the ID for the cleaning step
             timestamp=datetime.now(),
             processing_time_ms=int((time.time() - start) * 1000),
             **analysis,
         )
 
     except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Something went wrong reading your file: {e}")
-    finally:
+        # If analysis fails, clean up immediately
         if os.path.exists(tmp_path):
             os.unlink(tmp_path)
+        raise
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise HTTPException(status_code=500, detail=f"Something went wrong reading your file: {e}")
+    finally:
+        # Schedule the file to be deleted after 1 hour to allow time for cleaning
+        background_tasks.add_task(cleanup_file, tmp_path)

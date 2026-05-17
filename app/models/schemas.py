@@ -1,6 +1,13 @@
 from pydantic import BaseModel
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict
 from datetime import datetime
+
+
+class SuggestionAction(BaseModel):
+    action_id: str
+    type: str
+    description: str
+    params: Dict[str, Any]
 
 
 class ColumnReport(BaseModel):
@@ -16,11 +23,19 @@ class ColumnReport(BaseModel):
     outlier_count: Optional[int] = None
 
 
+class Suggestion(BaseModel):
+    issue_id: str
+    column: str
+    issue_type: str
+    description: str
+    suggested_actions: List[SuggestionAction]
+
+
 class ScanReport(BaseModel):
     success: bool
     dataset_name: str
     timestamp: datetime
-    total_rows: int
+    total_rows: int # This is a duplicate field, consider removing
     total_columns: int
     overall_health: str
     health_score: float
@@ -31,10 +46,12 @@ class ScanReport(BaseModel):
     memory_usage_mb: float
     columns: List[ColumnReport]
     summary: str
-    recommendations: List[str]
+    recommendations: List[str] # This is a duplicate field, consider removing
+    suggestions: List[Suggestion] = []
     # Populated when data comes from a web scrape
     source_url: Optional[str] = None
     rows_fetched: Optional[int] = None
+    file_id: Optional[str] = None
 
 
 class Dataset(BaseModel):
