@@ -9,24 +9,28 @@ import uuid
 import gc
 import pandas as pd
 import logging
+import io
 
 from app.models.schemas import ScanReport, Dataset
-# We will assume analyzer.py is updated to return a more detailed analysis
-# including actionable suggestions.
 from app.services.analyzer import analyze_dataframe
 from app.services.validator import validate_extension, validate_size, validate_csv
+from app.services.session_store import save_session
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 _DATA_DIR = Path(__file__).parent.parent.parent / "data"
+# Still used for validate_csv which needs a file path
 _TEMP_DIR = Path(tempfile.gettempdir()) / "datasnoop_uploads"
 _TEMP_DIR.mkdir(exist_ok=True)
 
 
 def cleanup_file(path: str):
-    """Utility to remove a file in the background."""
-    os.unlink(path)
+    """Utility to remove a temp file in the background."""
+    try:
+        os.unlink(path)
+    except FileNotFoundError:
+        pass
 
 
 # ── Demo ──────────────────────────────────────────────────────────────────────
@@ -43,11 +47,14 @@ async def demo():
 
     start = time.time()
     df = pd.read_csv(sample)
+    session_id = str(uuid.uuid4())
+    save_session(session_id, df)
     analysis = analyze_dataframe(df)
 
     return ScanReport(
         success=True,
         dataset_name="sample.csv (built-in demo)",
+        file_id=session_id,
         timestamp=datetime.now(),
         processing_time_ms=int((time.time() - start) * 1000),
         **analysis,
@@ -68,7 +75,7 @@ async def list_local_datasets():
         try:
             peek = pd.read_csv(f, nrows=1)
             cols = len(peek.columns)
-            row_count = sum(1 for _ in open(f)) - 1  # fast row count
+            row_count = sum(1 for _ in open(f)) - 1
         except Exception:
             cols, row_count = 0, 0
 
@@ -103,11 +110,14 @@ async def analyze_local_dataset(name: str):
 
     start = time.time()
     df = pd.read_csv(csv_path)
+    session_id = str(uuid.uuid4())
+    save_session(session_id, df)
     analysis = analyze_dataframe(df)
 
     return ScanReport(
         success=True,
         dataset_name=f"{name}.csv",
+        file_id=session_id,
         timestamp=datetime.now(),
         processing_time_ms=int((time.time() - start) * 1000),
         **analysis,
@@ -123,23 +133,21 @@ async def scan_file(background_tasks: BackgroundTasks, file: UploadFile = File(.
     outliers, and overall data quality. You'll get a per-column breakdown and
     plain-English recommendations.
     """
-    # Validate extension
     ok, err = validate_extension(file.filename or "")
     if not ok:
         raise HTTPException(status_code=400, detail=err)
 
     content = await file.read()
 
-    # Validate size
     ok, err = validate_size(content)
     if not ok:
         raise HTTPException(status_code=413, detail=err)
 
     start = time.time()
 
-    # Save file with a unique ID to be referenced later for cleaning
-    file_id = str(uuid.uuid4())
-    tmp_path = str(_TEMP_DIR / f"{file_id}.csv")
+    # Write temp file only so validate_csv (which needs a path) can run.
+    # The DataFrame is stored in memory — the temp file is deleted right after.
+    tmp_path = str(_TEMP_DIR / f"{uuid.uuid4()}.csv")
     Path(tmp_path).write_bytes(content)
 
     try:
@@ -147,25 +155,30 @@ async def scan_file(background_tasks: BackgroundTasks, file: UploadFile = File(.
         if not ok:
             raise HTTPException(status_code=400, detail=err)
 
+        # Read in chunks to handle large files without blowing memory at once
         chunks = []
         for chunk in pd.read_csv(tmp_path, chunksize=5000):
             chunks.append(chunk)
             gc.collect()
 
         df = pd.concat(chunks, ignore_index=True)
+
+        # Store in session — this is now the source of truth for cleaning
+        session_id = str(uuid.uuid4())
+        save_session(session_id, df)
+
         analysis = analyze_dataframe(df)
 
         return ScanReport(
             success=True,
             dataset_name=file.filename or "upload.csv",
-            file_id=file_id,  # Return the ID for the cleaning step
+            file_id=session_id,  # frontend uses this as session_id in /clean and /download
             timestamp=datetime.now(),
             processing_time_ms=int((time.time() - start) * 1000),
             **analysis,
         )
 
     except HTTPException:
-        # If analysis fails, clean up immediately
         if os.path.exists(tmp_path):
             os.unlink(tmp_path)
         raise
@@ -174,5 +187,5 @@ async def scan_file(background_tasks: BackgroundTasks, file: UploadFile = File(.
             os.unlink(tmp_path)
         raise HTTPException(status_code=500, detail=f"Something went wrong reading your file: {e}")
     finally:
-        # Schedule the file to be deleted after 1 hour to allow time for cleaning
+        # Temp file is only needed for validation — delete it immediately
         background_tasks.add_task(cleanup_file, tmp_path)

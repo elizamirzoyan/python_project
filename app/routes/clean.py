@@ -4,64 +4,48 @@ from pydantic import BaseModel
 from typing import List, Dict, Any
 import pandas as pd
 import io
-import uuid
 
 from app.services.cleaner import apply_cleaning_actions
+from app.services.session_store import get_session, update_session, delete_session
 
 router = APIRouter()
 
-# --- In-memory session store ---
-_sessions: dict[str, pd.DataFrame] = {}
 
-
-def _get_session(session_id: str) -> pd.DataFrame:
-    df = _sessions.get(session_id)
+def _require_session(session_id: str) -> pd.DataFrame:
+    """Fetch a session or raise a 404 with a clear message."""
+    df = get_session(session_id)
     if df is None:
         raise HTTPException(
             status_code=404,
-            detail="Session not found or expired. Please re-upload the file."
+            detail="Session not found or expired. Please re-upload your file.",
         )
     return df
 
 
-# --- Models ---
+# ── Models ────────────────────────────────────────────────────────────────────
 
 class CleanRequest(BaseModel):
-    session_id: str
+    session_id: str  # previously file_id — returned as file_id from /scan/file
     actions: List[Dict[str, Any]]
 
 
-# --- Endpoints ---
-
-@router.post("/api/v1/session", summary="Create a cleaning session from an uploaded DataFrame")
-async def create_session(file_data: Dict[str, Any]):
-    """
-    Accepts JSON-encoded records and stores them as a session.
-    Returns a session_id to use in subsequent clean/download calls.
-    """
-    try:
-        df = pd.DataFrame(file_data["records"])
-        session_id = str(uuid.uuid4())
-        _sessions[session_id] = df
-        return {"session_id": session_id, "rows": len(df), "columns": list(df.columns)}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to create session: {e}")
-
+# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.post("/api/v1/clean", summary="Apply cleaning actions and update session")
 async def clean_file(request: CleanRequest):
     """
-    Applies the selected cleaning actions to the session DataFrame.
-    Updates the session in place and returns a preview of the cleaned data.
+    Apply a list of cleaning actions to the session DataFrame.
+    The session is updated in place so subsequent calls build on previous ones.
+    Returns a preview of the first 50 rows after cleaning.
     """
     if not request.actions:
         raise HTTPException(status_code=400, detail="No cleaning actions provided.")
 
-    df = _get_session(request.session_id)
+    df = _require_session(request.session_id)
 
     try:
         cleaned_df = apply_cleaning_actions(df, request.actions)
-        _sessions[request.session_id] = cleaned_df  # overwrite with cleaned version
+        update_session(request.session_id, cleaned_df)
 
         return {
             "session_id": request.session_id,
@@ -76,13 +60,13 @@ async def clean_file(request: CleanRequest):
 @router.get("/api/v1/download/{session_id}", summary="Download the final cleaned CSV")
 async def download_file(session_id: str):
     """
-    Streams the cleaned DataFrame as a CSV file and removes the session.
+    Stream the cleaned DataFrame as a CSV file and remove the session from memory.
     """
-    df = _get_session(session_id)
+    df = _require_session(session_id)
 
     stream = io.StringIO()
     df.to_csv(stream, index=False)
-    del _sessions[session_id]  # cleanup after download
+    delete_session(session_id)
 
     response = StreamingResponse(iter([stream.getvalue()]), media_type="text/csv")
     response.headers["Content-Disposition"] = f"attachment; filename=cleaned_{session_id}.csv"
@@ -92,7 +76,8 @@ async def download_file(session_id: str):
 @router.delete("/api/v1/session/{session_id}", summary="Discard a session without downloading")
 async def discard_session(session_id: str):
     """
-    Explicitly cleans up a session if the user cancels without downloading.
+    Explicitly remove a session if the user cancels without downloading.
+    Safe to call even if the session has already expired.
     """
-    _sessions.pop(session_id, None)
+    delete_session(session_id)
     return {"detail": "Session discarded."}
