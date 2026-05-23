@@ -11,7 +11,11 @@ from app.services.cleaner import apply_cleaning_actions
 
 router = APIRouter()
 
-_TEMP_DIR = Path(tempfile.gettempdir()) / "datasnoop_uploads"
+TEMP_DIR = Path(tempfile.gettempdir()) / "datasnoop_uploads"
+TEMP_DIR.mkdir(parents=True, exist_ok=True)
+
+def get_upload_path(file_id: str) -> Path:
+    return TEMP_DIR / f"{file_id}.csv"
 
 
 class CleanRequest(BaseModel):
@@ -25,7 +29,7 @@ async def clean_file(request: CleanRequest):
     Provide the `file_id` from a scan and a list of `suggested_action` objects
     to apply the fixes. The endpoint returns the cleaned CSV file for download.
     """
-    file_path = _TEMP_DIR / f"{request.file_id}.csv"
+    file_path = get_upload_path(request.file_id)
 
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="File ID not found or has expired. Please re-upload the file.")
