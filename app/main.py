@@ -360,7 +360,6 @@ _PAGE = """<!DOCTYPE html>
       body: JSON.stringify({ session_id: sessionId, actions: [action] })
     });
 
-    if (!response.ok) throw new Error((await response.json()).detail);
     if (!response.ok) {
       let msg;
       try { msg = (await response.json()).detail; }
