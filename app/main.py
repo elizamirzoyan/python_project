@@ -343,44 +343,50 @@ _PAGE = """<!DOCTYPE html>
   }
 
   async function applyFix(btn, action) {
-    const fileId = window.currentScanData?.file_id;
-    if (!fileId) {
-      showError("Cannot apply fix: no file ID found. Please re-upload the file.");
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Applying...';
-
-    try {
-      const response = await fetch('/api/v1/clean/file', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file_id: fileId, actions: [action] })
-      });
-
-      if (!response.ok) throw new Error((await response.json()).detail);
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `cleaned_${fileId.substring(0,8)}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      btn.textContent = '✅ Downloaded';
-
-    } catch (e) {
-      btn.textContent = '❌ Failed';
-      alert('Failed to apply fix: ' + e.message);
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = action.description;
-      }, 2000);
-    }
+  const sessionId = window.currentScanData?.file_id;
+  if (!sessionId) {
+    showError("Cannot apply fix: no session found. Please re-upload the file.");
+    return;
   }
+
+  btn.disabled = true;
+  btn.textContent = 'Applying...';
+
+  try {
+    // Step 1: apply the cleaning action, update session in memory
+    const response = await fetch('/api/v1/clean', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, actions: [action] })
+    });
+
+    if (!response.ok) throw new Error((await response.json()).detail);
+
+    btn.textContent = '✅ Applied';
+
+    // Step 2: show a download button so the user can grab the file when ready
+    const existingDownload = document.getElementById('download-btn');
+    if (!existingDownload) {
+      const dlBtn = document.createElement('a');
+      dlBtn.id = 'download-btn';
+      dlBtn.className = 'btn btn-primary';
+      dlBtn.style.marginTop = '1rem';
+      dlBtn.style.display = 'inline-block';
+      dlBtn.textContent = '⬇️ Download cleaned CSV';
+      dlBtn.href = `/api/v1/download/${sessionId}`;
+      dlBtn.download = `cleaned_${sessionId.substring(0, 8)}.csv`;
+      document.getElementById('results-inner').prepend(dlBtn);
+    }
+
+  } catch (e) {
+    btn.textContent = '❌ Failed';
+    alert('Failed to apply fix: ' + e.message);
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = action.description;
+    }, 2000);
+  }
+}
 
   async function uploadFile(file) {
     if (!file) return;
