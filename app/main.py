@@ -361,7 +361,12 @@ _PAGE = """<!DOCTYPE html>
     });
 
     if (!response.ok) throw new Error((await response.json()).detail);
-
+    if (!response.ok) {
+      let msg;
+      try { msg = (await response.json()).detail; }
+      catch { msg = await response.text(); }
+      throw new Error(msg);
+    }
     btn.textContent = '✅ Applied';
 
     // Step 2: show a download button so the user can grab the file when ready
