@@ -30,10 +30,13 @@ def apply_cleaning_actions(df: pd.DataFrame, actions: List[Dict[str, Any]]) -> p
             if action_type == "IMPUTE":
                 if params["strategy"] == "median":
                     fill_value = cleaned_df[column].median()
-                    cleaned_df[column].fillna(fill_value, inplace=True)
+                    cleaned_df[column] = cleaned_df[column].fillna(fill_value)
                 elif params["strategy"] == "mode":
                     fill_value = cleaned_df[column].mode()[0]
-                    cleaned_df[column].fillna(fill_value, inplace=True)
+                    cleaned_df[column] = cleaned_df[column].fillna(fill_value)
+                elif params["strategy"] == "mean":
+                    fill_value = cleaned_df[column].mean()
+                    cleaned_df[column] = cleaned_df[column].fillna(fill_value)
 
             elif action_type == "STRIP_WHITESPACE":
                 if pd.api.types.is_object_dtype(cleaned_df[column]):
