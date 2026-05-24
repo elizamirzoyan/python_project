@@ -7,13 +7,23 @@ import io
 
 import logging
 from app.services.session_store import get_session, update_session, delete_session, _sessions
+import math
 
 from app.services.cleaner import apply_cleaning_actions
 from app.services.session_store import get_session, update_session, delete_session
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+# top of clean.py, after imports
 
+def _sanitize_preview(df: pd.DataFrame) -> list:
+    """Convert NaN/Inf to None so the response serializes cleanly."""
+    raw = df.head(50).to_dict(orient="records")
+    return [
+        {k: None if isinstance(v, float) and (math.isnan(v) or math.isinf(v)) else v
+         for k, v in row.items()}
+        for row in raw
+    ]
 
 def _require_session(session_id: str) -> pd.DataFrame:
     """Fetch a session or raise a 404 with a clear message."""
@@ -58,7 +68,7 @@ async def clean_file(request: CleanRequest):
             "session_id": request.session_id,
             "rows": len(cleaned_df),
             "columns": list(cleaned_df.columns),
-            "preview": cleaned_df.head(50).to_dict(orient="records"),
+            "preview": _sanitize_preview(cleaned_df),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Cleaning failed: {e}")
