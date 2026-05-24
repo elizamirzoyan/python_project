@@ -5,8 +5,12 @@ from typing import List, Dict, Any
 import pandas as pd
 import io
 
+import logging
+from app.services.session_store import get_session, update_session, delete_session, _sessions
+
 from app.services.cleaner import apply_cleaning_actions
 from app.services.session_store import get_session, update_session, delete_session
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -41,6 +45,9 @@ async def clean_file(request: CleanRequest):
     if not request.actions:
         raise HTTPException(status_code=400, detail="No cleaning actions provided.")
 
+        # TEMP DEBUG — remove after fixing
+    logger.info(f"SESSION REQUESTED: {request.session_id}")
+    logger.info(f"SESSIONS IN STORE: {list(_sessions.keys())}")
     df = _require_session(request.session_id)
 
     try:
