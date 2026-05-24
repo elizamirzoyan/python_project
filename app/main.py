@@ -361,9 +361,10 @@ _PAGE = """<!DOCTYPE html>
     });
 
     if (!response.ok) {
+      const raw = await response.text();
       let msg;
-      try { msg = (await response.json()).detail; }
-      catch { msg = await response.text(); }
+      try { msg = JSON.parse(raw).detail; }
+      catch { msg = raw; }
       throw new Error(msg);
     }
     btn.textContent = '✅ Applied';
