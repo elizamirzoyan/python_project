@@ -2,6 +2,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """
+    Central configuration for DataSnoop.
+    All values can be overridden via environment variables or a .env file.
+    """
+
     APP_NAME: str = "DataSnoop"
     APP_VERSION: str = "2.0.0"
     APP_DESCRIPTION: str = (
@@ -14,8 +19,9 @@ class Settings(BaseSettings):
     PORT: int = 8000
     RELOAD: bool = True
 
-    CHUNK_SIZE: int = 10000
+    CHUNK_SIZE: int = 10_000
     MAX_FILE_SIZE_MB: int = 500
+    MAX_COLUMNS: int = 1_000
 
     MAX_CONCURRENT_REQUESTS: int = 10
     REQUEST_TIMEOUT: int = 30
@@ -28,7 +34,6 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-# Convenience exports used by main.py and routes
 APP_NAME = settings.APP_NAME
 APP_VERSION = settings.APP_VERSION
 APP_DESCRIPTION = settings.APP_DESCRIPTION

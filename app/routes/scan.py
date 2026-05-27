@@ -1,17 +1,24 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+"""
+Scan endpoints — upload a CSV or analyse a local file and get back a full
+data-quality report with per-column stats, issue suggestions, and a health score.
+"""
+
+import gc
+import io
+import logging
+import time
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import List
-import tempfile
-import os
-import time
-import gc
-import pandas as pd
-import logging
 
-from app.models.schemas import ScanReport, Dataset
+import pandas as pd
+from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
+
+from app.models.schemas import Dataset, ScanReport
 from app.services.analyzer import analyze_dataframe
-from app.services.validator import validate_extension, validate_size, validate_csv
+from app.services.session_store import save_session
+from app.services.validator import validate_csv_bytes, validate_extension, validate_size
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -19,57 +26,84 @@ logger = logging.getLogger(__name__)
 _DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
 
-# ── Demo ──────────────────────────────────────────────────────────────────────
-
-@router.get("/api/v1/demo", response_model=ScanReport, summary="Try DataSnoop on sample data")
-async def demo():
+def _build_scan_report(
+    df: pd.DataFrame,
+    dataset_name: str,
+    start_time: float,
+    source_url: str | None = None,
+) -> ScanReport:
     """
-    No file needed — run DataSnoop on the built-in sample dataset to see what the
-    output looks like. Perfect for a first look.
-    """
-    sample = _DATA_DIR / "sample.csv"
-    if not sample.exists():
-        raise HTTPException(status_code=404, detail="sample.csv not found in data/")
+    Run analysis on df and wrap the result in a ScanReport.
 
-    start = time.time()
-    df = pd.read_csv(sample)
+    Also saves the DataFrame to the session store so clean/download
+    endpoints can access it later.
+    """
+    session_id = str(uuid.uuid4())
+    save_session(session_id, df)
     analysis = analyze_dataframe(df)
 
     return ScanReport(
         success=True,
-        dataset_name="sample.csv (built-in demo)",
+        dataset_name=dataset_name,
+        file_id=session_id,
         timestamp=datetime.now(),
-        processing_time_ms=int((time.time() - start) * 1000),
+        processing_time_ms=int((time.time() - start_time) * 1000),
+        source_url=source_url,
+        rows_fetched=len(df) if source_url else None,
         **analysis,
     )
 
 
-# ── Local datasets ────────────────────────────────────────────────────────────
+@router.get(
+    "/api/v1/demo",
+    response_model=ScanReport,
+    summary="Try DataSnoop on sample data",
+)
+async def demo() -> ScanReport:
+    """
+    Run a full analysis on the built-in sample dataset.
 
-@router.get("/api/v1/local-datasets", response_model=List[Dataset], summary="List local CSV files")
-async def list_local_datasets():
+    No file upload needed — great for a quick first look at what DataSnoop produces.
     """
-    See all CSV files available in the data/ folder.
-    Run scripts/generate_test_data.py first to populate it with benchmark datasets.
+    sample_path = _DATA_DIR / "sample.csv"
+    if not sample_path.exists():
+        raise HTTPException(status_code=404, detail="sample.csv not found in data/.")
+
+    start = time.time()
+    df = pd.read_csv(sample_path)
+    return _build_scan_report(df, "sample.csv (built-in demo)", start)
+
+
+@router.get(
+    "/api/v1/local-datasets",
+    response_model=List[Dataset],
+    summary="List local CSV files",
+)
+async def list_local_datasets() -> List[Dataset]:
     """
-    files = []
-    for f in sorted(_DATA_DIR.glob("*.csv")):
-        size_kb = round(f.stat().st_size / 1024, 1)
+    Return metadata for every CSV file in the data/ directory.
+
+    Run ``scripts/generate_test_data.py`` first to populate the folder with
+    benchmark datasets if it is empty.
+    """
+    datasets = []
+    for csv_file in sorted(_DATA_DIR.glob("*.csv")):
+        size_kb = round(csv_file.stat().st_size / 1024, 1)
         try:
-            peek = pd.read_csv(f, nrows=1)
-            cols = len(peek.columns)
-            row_count = sum(1 for _ in open(f)) - 1  # fast row count
+            peek = pd.read_csv(csv_file, nrows=1)
+            col_count = len(peek.columns)
+            row_count = sum(1 for _ in open(csv_file)) - 1
         except Exception:
-            cols, row_count = 0, 0
+            col_count, row_count = 0, 0
 
-        files.append(Dataset(
-            id=f.stem,
-            name=f.name,
-            description=f"{cols} columns · ~{row_count} rows · {size_kb} KB on disk",
+        datasets.append(Dataset(
+            id=csv_file.stem,
+            name=csv_file.name,
+            description=f"{col_count} columns · ~{row_count} rows · {size_kb} KB on disk",
             category="Local File",
             estimated_rows=str(row_count),
         ))
-    return files
+    return datasets
 
 
 @router.get(
@@ -77,11 +111,11 @@ async def list_local_datasets():
     response_model=ScanReport,
     summary="Analyze a local CSV file",
 )
-async def analyze_local_dataset(name: str):
+async def analyze_local_dataset(name: str) -> ScanReport:
     """
-    Analyze any CSV file in the data/ folder by name (no .csv extension needed).
+    Analyze any CSV in the data/ directory by name (without the .csv extension).
 
-    Example: /api/v1/local-datasets/employees
+    Example: GET /api/v1/local-datasets/employees
     """
     csv_path = _DATA_DIR / f"{name}.csv"
     if not csv_path.exists():
@@ -93,70 +127,45 @@ async def analyze_local_dataset(name: str):
 
     start = time.time()
     df = pd.read_csv(csv_path)
-    analysis = analyze_dataframe(df)
-
-    return ScanReport(
-        success=True,
-        dataset_name=f"{name}.csv",
-        timestamp=datetime.now(),
-        processing_time_ms=int((time.time() - start) * 1000),
-        **analysis,
-    )
+    return _build_scan_report(df, f"{name}.csv", start)
 
 
-# ── File upload ───────────────────────────────────────────────────────────────
-
-@router.post("/api/v1/scan/file", response_model=ScanReport, summary="Upload & analyze your CSV")
-async def scan_file(file: UploadFile = File(...)):
+@router.post(
+    "/api/v1/scan/file",
+    response_model=ScanReport,
+    summary="Upload and analyze a CSV",
+)
+async def scan_file(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+) -> ScanReport:
     """
-    Upload a CSV file and DataSnoop will analyze it — checking for missing values,
-    outliers, and overall data quality. You'll get a per-column breakdown and
-    plain-English recommendations.
+    Upload a CSV file and receive a full data-quality report.
+
+    The file is read in chunks to handle large uploads without exhausting RAM.
+    A session ID returned in ``file_id`` can be passed to the clean and download
+    endpoints to apply fixes and retrieve the result.
     """
-    # Validate extension
     ok, err = validate_extension(file.filename or "")
     if not ok:
         raise HTTPException(status_code=400, detail=err)
 
     content = await file.read()
 
-    # Validate size
     ok, err = validate_size(content)
     if not ok:
         raise HTTPException(status_code=413, detail=err)
 
+    ok, err = validate_csv_bytes(content)
+    if not ok:
+        raise HTTPException(status_code=400, detail=err)
+
     start = time.time()
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp:
-        tmp.write(content)
-        tmp_path = tmp.name
+    chunks = []
+    for chunk in pd.read_csv(io.BytesIO(content), chunksize=5_000):
+        chunks.append(chunk)
+        gc.collect()
 
-    try:
-        # Validate CSV structure
-        ok, err = validate_csv(tmp_path)
-        if not ok:
-            raise HTTPException(status_code=400, detail=err)
-
-        chunks = []
-        for chunk in pd.read_csv(tmp_path, chunksize=5000):
-            chunks.append(chunk)
-            gc.collect()
-
-        df = pd.concat(chunks, ignore_index=True)
-        analysis = analyze_dataframe(df)
-
-        return ScanReport(
-            success=True,
-            dataset_name=file.filename or "upload.csv",
-            timestamp=datetime.now(),
-            processing_time_ms=int((time.time() - start) * 1000),
-            **analysis,
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Something went wrong reading your file: {e}")
-    finally:
-        if os.path.exists(tmp_path):
-            os.unlink(tmp_path)
+    df = pd.concat(chunks, ignore_index=True)
+    return _build_scan_report(df, file.filename or "upload.csv", start)

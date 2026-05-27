@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from fastapi import APIRouter
 from pydantic import BaseModel
-from datetime import datetime
 
 from app.config import APP_NAME, APP_VERSION
 
@@ -8,6 +9,8 @@ router = APIRouter()
 
 
 class HealthResponse(BaseModel):
+    """Response shape for the health-check endpoint."""
+
     status: str
     app: str
     version: str
@@ -16,8 +19,8 @@ class HealthResponse(BaseModel):
 
 
 @router.get("/health", response_model=HealthResponse, summary="Health check")
-async def health_check():
-    """Quick check to confirm DataSnoop is up and running."""
+async def health_check() -> HealthResponse:
+    """Confirm that the DataSnoop API is up and accepting requests."""
     return HealthResponse(
         status="healthy",
         app=APP_NAME,

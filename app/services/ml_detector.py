@@ -1,63 +1,100 @@
+import logging
+from typing import Dict, Any
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-from typing import Dict, Any, Optional
-import logging
-
-from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+MIN_ROWS_REQUIRED = 10
+
 
 class AnomalyDetector:
-    def __init__(self) -> None:
-        self.model: Optional[IsolationForest] = None
-        self.scaler: Optional[StandardScaler] = None
-        self.is_trained = False
-        self.feature_columns: list = []
+    """
+    Wraps scikit-learn's IsolationForest to flag anomalous rows in a DataFrame.
+
+    Usage:
+        detector = AnomalyDetector()
+        detector.train(df)
+        result = detector.predict(df)
+    """
+
+    def __init__(self, contamination: float = 0.1, random_state: int = 42) -> None:
+        self._model = IsolationForest(
+            contamination=contamination,
+            random_state=random_state,
+            n_jobs=-1,
+        )
+        self.is_trained: bool = False
+        self._feature_columns: list[str] = []
 
     def train(self, df: pd.DataFrame) -> Dict[str, Any]:
-        numeric_df = df.select_dtypes(include=[np.number])
-        if numeric_df.empty:
-            return {"success": False, "error": "No numeric columns found"}
-        if len(numeric_df) < 10:
-            return {"success": False, "error": "Need at least 10 rows to train"}
+        """
+        Fit the model on the numeric columns of df.
 
-        self.feature_columns = list(numeric_df.columns)
-        numeric_df = numeric_df.fillna(numeric_df.mean())
+        Returns a dict with keys:
+            success (bool)  — whether training succeeded
+            error   (str)   — human-readable reason when success is False
+            columns (list)  — names of the columns used for training
+        """
+        numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
 
-        self.scaler = StandardScaler()
-        X = self.scaler.fit_transform(numeric_df)
+        if not numeric_cols:
+            self.is_trained = False
+            return {"success": False, "error": "No numeric columns found.", "columns": []}
 
-        self.model = IsolationForest(
-            contamination=settings.ANOMALY_CONTAMINATION,
-            random_state=settings.RANDOM_SEED,
-            n_estimators=100,
-        )
-        self.model.fit(X)
+        if len(df) < MIN_ROWS_REQUIRED:
+            self.is_trained = False
+            return {
+                "success": False,
+                "error": f"Need at least {MIN_ROWS_REQUIRED} rows to train; got {len(df)}.",
+                "columns": [],
+            }
+
+        train_data = df[numeric_cols].fillna(df[numeric_cols].median())
+        self._model.fit(train_data)
+        self._feature_columns = numeric_cols
         self.is_trained = True
 
-        return {
-            "success": True,
-            "n_samples": len(numeric_df),
-            "n_features": len(self.feature_columns),
-        }
+        logger.info("AnomalyDetector trained on columns: %s", numeric_cols)
+        return {"success": True, "error": None, "columns": numeric_cols}
 
     def predict(self, df: pd.DataFrame) -> Dict[str, Any]:
-        if not self.is_trained or self.model is None:
-            return {"is_trained": False, "anomaly_ratio": 0.0, "status": "NOT_TRAINED"}
+        """
+        Score rows in df and return anomaly statistics.
 
-        available = [c for c in self.feature_columns if c in df.columns]
-        if not available:
-            return {"is_trained": True, "anomaly_ratio": 0.0, "status": "NO_MATCHING_FEATURES"}
+        Returns a dict with keys:
+            is_trained      (bool)
+            status          (str)   — one of NOT_TRAINED, NO_MATCHING_FEATURES,
+                                      CLEAN, MODERATE_ANOMALIES, HIGH_ANOMALIES
+            anomaly_count   (int)
+            anomaly_ratio   (float) — fraction of rows flagged as anomalous
+            total_rows      (int)
+        """
+        if not self.is_trained:
+            return {
+                "is_trained": False,
+                "status": "NOT_TRAINED",
+                "anomaly_count": 0,
+                "anomaly_ratio": 0.0,
+                "total_rows": len(df),
+            }
 
-        X = df[available].fillna(df[available].mean())
-        X_scaled = self.scaler.transform(X)
-        preds = self.model.predict(X_scaled)
+        available_cols = [c for c in self._feature_columns if c in df.columns]
+        if not available_cols:
+            return {
+                "is_trained": True,
+                "status": "NO_MATCHING_FEATURES",
+                "anomaly_count": 0,
+                "anomaly_ratio": 0.0,
+                "total_rows": len(df),
+            }
 
-        anomaly_count = int((preds == -1).sum())
-        anomaly_ratio = round(anomaly_count / len(preds), 4)
+        predict_data = df[available_cols].fillna(df[available_cols].median())
+        predictions = self._model.predict(predict_data)
+        anomaly_count = int((predictions == -1).sum())
+        anomaly_ratio = anomaly_count / len(df) if len(df) > 0 else 0.0
 
         if anomaly_ratio > 0.2:
             status = "HIGH_ANOMALIES"
@@ -68,11 +105,8 @@ class AnomalyDetector:
 
         return {
             "is_trained": True,
-            "anomaly_ratio": anomaly_ratio,
-            "anomaly_count": anomaly_count,
-            "total_rows": len(preds),
             "status": status,
+            "anomaly_count": anomaly_count,
+            "anomaly_ratio": anomaly_ratio,
+            "total_rows": len(df),
         }
-
-
-ml_model = AnomalyDetector()
