@@ -2,6 +2,7 @@ import aiohttp
 import pandas as pd
 from typing import Dict, Any, Tuple, Optional
 import logging
+import asyncio 
 
 from app.config import settings
 
@@ -94,6 +95,7 @@ def _flatten(record: Any) -> Dict[str, Any]:
     return out
 
 
+
 async def fetch_dataset(dataset_id: str) -> Tuple[pd.DataFrame, str]:
     """Fetch a built-in dataset and return (DataFrame, source_url)."""
     if dataset_id not in BUILT_IN_DATASETS:
@@ -106,11 +108,27 @@ async def fetch_dataset(dataset_id: str) -> Tuple[pd.DataFrame, str]:
     list_key: Optional[str] = meta.get("list_key")
 
     timeout = aiohttp.ClientTimeout(total=settings.REQUEST_TIMEOUT)
+    
+    max_retries = 3
+    delay = 2  # Start with a 2-second delay
+    
     async with aiohttp.ClientSession(timeout=timeout) as session:
-        async with session.get(url) as response:
-            if response.status != 200:
-                raise RuntimeError(f"Could not fetch data — HTTP {response.status}")
-            data = await response.json(content_type=None)
+        for attempt in range(max_retries):
+            async with session.get(url) as response:
+                if response.status == 429:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Rate limited (429) for {dataset_id}. Retrying in {delay}s...")
+                        await asyncio.sleep(delay)
+                        delay *= 2  # Double the wait time for the next attempt
+                        continue
+                    else:
+                        raise RuntimeError("Could not fetch data — HTTP 429 (Rate Limit Exceeded)")
+                
+                if response.status != 200:
+                    raise RuntimeError(f"Could not fetch data — HTTP {response.status}")
+                
+                data = await response.json(content_type=None)
+                break # Success, break out of the retry loop
 
     # Some APIs wrap the list in an object (e.g. {"products": [...]})
     if list_key and isinstance(data, dict):

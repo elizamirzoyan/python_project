@@ -14,7 +14,6 @@ from app.services.session_store import get_session, update_session, delete_sessi
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-# top of clean.py, after imports
 
 def _sanitize_preview(df: pd.DataFrame) -> list:
     """Convert NaN/Inf to None so the response serializes cleanly."""
