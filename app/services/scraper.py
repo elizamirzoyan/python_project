@@ -110,7 +110,7 @@ async def fetch_dataset(dataset_id: str) -> Tuple[pd.DataFrame, str]:
     timeout = aiohttp.ClientTimeout(total=settings.REQUEST_TIMEOUT)
     
     max_retries = 3
-    delay = 2  # Start with a 2-second delay
+    delay = 2  
     
     async with aiohttp.ClientSession(timeout=timeout) as session:
         for attempt in range(max_retries):
@@ -119,7 +119,7 @@ async def fetch_dataset(dataset_id: str) -> Tuple[pd.DataFrame, str]:
                     if attempt < max_retries - 1:
                         logger.warning(f"Rate limited (429) for {dataset_id}. Retrying in {delay}s...")
                         await asyncio.sleep(delay)
-                        delay *= 2  # Double the wait time for the next attempt
+                        delay *= 2  
                         continue
                     else:
                         raise RuntimeError("Could not fetch data — HTTP 429 (Rate Limit Exceeded)")
@@ -128,15 +128,13 @@ async def fetch_dataset(dataset_id: str) -> Tuple[pd.DataFrame, str]:
                     raise RuntimeError(f"Could not fetch data — HTTP {response.status}")
                 
                 data = await response.json(content_type=None)
-                break # Success, break out of the retry loop
+                break 
 
-    # Some APIs wrap the list in an object (e.g. {"products": [...]})
     if list_key and isinstance(data, dict):
         data = data.get(list_key, [])
 
     if not isinstance(data, list):
         raise ValueError("Expected a list of records from the API")
 
-    # Cap at 300 rows so analysis stays snappy
-    records = [_flatten(item) for item in data[:300]]
+    records = [_flatten(item) for item in data]
     return pd.DataFrame(records), url
